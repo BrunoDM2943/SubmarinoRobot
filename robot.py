@@ -33,7 +33,7 @@ class Robot(threading.Thread):
                 values = 'Date={}, Name={}, Price={}'.format(datetime.datetime.now(),name, price);
                 print(values)
                 prices.append(values)
-                time.sleep(10)
+                time.sleep(1800)
             except:
                 pass
 
