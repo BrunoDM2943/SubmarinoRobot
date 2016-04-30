@@ -25,7 +25,6 @@ class Robot(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        file = open('db','w')
         while True:
             try:
                 with urllib.request.urlopen(request) as response:
@@ -35,9 +34,8 @@ class Robot(threading.Thread):
                 name = re.findall(regexName, str_html)[2]
                 values = 'Date={}, Name={}, Price={}'.format(datetime.datetime.now(),name, price);
                 print(values)
-                file.write(values)
                 prices.append(values)
-                time.sleep(1800)
+                time.sleep(30)
             except:
                 pass
 
