@@ -1,1 +1,1 @@
-pip install Flask
+Flask==0.8
