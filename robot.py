@@ -5,6 +5,8 @@ import datetime
 import socket
 import sys
 import threading
+from flask import Flask
+app = Flask(__name__)
 
 
 __author__ = 'Bruno'
@@ -33,39 +35,18 @@ class Robot(threading.Thread):
                 values = 'Date={}, Name={}, Price={}'.format(datetime.datetime.now(),name, price);
                 print(values)
                 prices.append(values)
-                time.sleep(1800)
+                time.sleep(5)
             except:
                 pass
 
-HOST = ''   # Symbolic name, meaning all available interfaces
-PORT = 80 # Arbitrary non-privileged port
-serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-try:
-    serverSocket.bind((HOST, PORT))
-except socket.error as msg:
-    print('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
-    sys.exit()
-
-serverSocket.listen(5)
-print('Open')
-t = Robot()
-t.daemon = True
-t.start()
-while True:
-    print('waiting')
-    c, (client_host, client_port) = serverSocket.accept()
-    print('Got connection from', client_host, client_port)
-    c.recv(1000)
-    c.send(b'HTTP/1.0 200 OK\n')
-    c.send(b'Content-Type: text/html\n')
-    c.send(b'\n') # header and body should be separated by additional newline
-    html_response = "<html><body><h1>Precos do Submarino</h1><br>"
-
+Robot().start()
+@app.route("/")
+def index():
+    str = ''
     for item in prices:
-        html_response += item
-        html_response += '<br>'
-    html_response += '</body></html>'
-    c.send(str.encode(html_response))
-    c.close()
-serverSocket.close()
+        str += item
+        str += '<br>'
+    return str
 
+if __name__ == "__main__":
+    app.run()
